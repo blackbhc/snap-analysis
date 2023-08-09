@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import binned_statistic_2d as bin2d
@@ -19,14 +20,14 @@ barWidthRatio = 0.05
 margin = 0.15 * figsize
 W = figsize + 2 * margin
 H = figsize * (1 + ratio) + 2 * margin
-maxStep = 100
-timeDuration = 10 
-startStep = 0 
+allSteps = 100
+timeDuration = 10
+startStep = 0
 endStep = 100
 startTime = 0
 dir = "/home/bhchen/BarFormation/MajorMerger/Simulations/main/output/"
 files = ["snapshot_" + f"{i}".zfill(3) + ".hdf5" for i in range(startStep, endStep + 1)]
-times = np.arange(startStep, maxStep + 1, 1) / maxStep * timeDuration + startTime
+times = np.arange(startStep, allSteps + 1, 1) / allSteps * timeDuration + startTime
 
 
 def logNorm(mat):
@@ -93,8 +94,8 @@ for i, file in enumerate(files):
     axes[1].set_xlabel(r"$X$ [kpc]")
     axes[1].set_ylabel(r"$Z$ [kpc]")
     axes[0].text(
-        phy2pixel1(-.75 * size),
-        phy2pixel1(.75 * size),
+        phy2pixel1(-0.75 * size),
+        phy2pixel1(0.75 * size),
         r"$T=$" + f"{times[i]:.1f}" + " Gyr",
         fontsize=36,
         color="red",
