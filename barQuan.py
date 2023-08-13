@@ -116,7 +116,7 @@ binnum = 50 # the number of the radial bins
 model = "Model4"
 dir = "/home/bhchen/BarFormation/timeScale/Simulations/{}/output/".format(model) # the directory of the snapshots
 logDir = "/home/bhchen/BarFormation/timeScale/Analysis/Quantities/{}/".format(model) # the directory of the log files
-logFile = logDir + "log_{}.txt".format(model) # the log file
+logFile = logDir + "barParas.txt" # the log file
 txtLog = open(logFile, "w") # open the log file
 txtLog.write("#time\tbarStrength\tbarAngle\tbucklingStrength\tcriticalRadius\n") # write the header of the log file
 
