@@ -28,7 +28,7 @@ def GetA2phase(masses, phis):  # the function to calculate the bar angle
 
 
 def GetCoM(
-    coordinates, mass, size, maxLoop=500
+    coordinates, mass, size=10, maxLoop=500
 ):  # the function to calculate the center of masses
     index = np.where(np.linalg.norm(coordinates, axis=1) < 10000)[
         0
@@ -106,14 +106,14 @@ def Car2Cylin3D(coordinates, cenOfMass):
     return R, phi, z
 
 
-def GetA2max(coordinates, masses, range=[0, 10], bins=50):
+def GetA2max(coordinates, masses, scope=[0, 10], bins=50):
     """
     Function to calculate the maximum A2 absolute value in some radial bins.
     -------------------------
     Parameters:
         coordinates: the coordinates of particles
         masses: the masses of particles
-        range: the range of radial bins
+        scope: the range of radial bins
         bins: the number of radial bins
 
     Return:
@@ -122,7 +122,7 @@ def GetA2max(coordinates, masses, range=[0, 10], bins=50):
     Rs, phis, _ = Car2Cylin3D(
         coordinates, GetCoM(coordinates, masses, size=10)
     )  # convert the coordinates to cylindrical
-    RbinEdges = np.linspace(range[0], range[1], bins + 1)  # the edges of radial bins
+    RbinEdges = np.linspace(scope[0], scope[1], bins + 1)  # the edges of radial bins
     A2s = np.zeros(bins)  # initialize the A2 values in radial bins
     for i in range(bins):
         index = np.where((Rs >= RbinEdges[i]) & (Rs < RbinEdges[i + 1]))[0]
@@ -133,14 +133,14 @@ def GetA2max(coordinates, masses, range=[0, 10], bins=50):
     return np.max(A2s)
 
 
-def GetA2phases(coordinates, masses, range=[0, 10], bins=50):
+def GetA2phases(coordinates, masses, scope=[0, 10], bins=50):
     """
     Function to calculate the phase angles of m=2 Fourier mode in some radial bins.
-    -------------------------
+    -----------
     Parameters:
         coordinates: the coordinates of particles
         masses: the masses of particles
-        range: the range of radial bins
+        scope: the range of radial bins
         bins: the number of radial bins
 
     Return:
@@ -149,7 +149,7 @@ def GetA2phases(coordinates, masses, range=[0, 10], bins=50):
     Rs, phis, _ = Car2Cylin3D(
         coordinates, GetCoM(coordinates, masses, size=10)
     )  # convert the coordinates to cylindrical
-    RbinEdges = np.linspace(range[0], range[1], bins + 1)  # the edges of radial bins
+    RbinEdges = np.linspace(scope[0], scope[1], bins + 1)  # the edges of radial bins
     A2phases = np.zeros(bins)  # initialize the A2 values in radial bins
     for i in range(bins):
         index = np.where((Rs >= RbinEdges[i]) & (Rs < RbinEdges[i + 1]))[0]
@@ -158,3 +158,80 @@ def GetA2phases(coordinates, masses, range=[0, 10], bins=50):
             masses[index], phis[index]
         )  # calculate the A2 value in radial bin
     return A2phases
+
+
+def GetA2amps(coordinates, masses, scope=[0, 10], bins=50):
+    """
+    Function to calculate the amplitude of m=2 Fourier mode in some radial bins.
+    -----------
+    Parameters:
+        coordinates: the coordinates of particles
+        masses: the masses of particles
+        scope: the range of radial bins
+        bins: the number of radial bins
+
+    Return:
+        A2amps: the amplitude of m=2 Fourier mode in radial bins
+    """
+    Rs, phis, _ = Car2Cylin3D(
+        coordinates, GetCoM(coordinates, masses, size=10)
+    )  # convert the coordinates to cylindrical
+    RbinEdges = np.linspace(scope[0], scope[1], bins + 1)  # the edges of radial bins
+    A2amps = np.zeros(bins)  # initialize the A2 values in radial bins
+    for i in range(bins):
+        index = np.where((Rs >= RbinEdges[i]) & (Rs < RbinEdges[i + 1]))[0]
+        # the condition to select the particles: inside the radial bin
+        A2amps[i] = np.abs(
+            A2(masses[index], phis[index])
+        )  # calculate the A2 value in radial bin
+    return A2amps
+
+
+def GetBarLength(coordinates, masses, scope=[0, 20], bins=50, threshold=0.5):
+    """
+    Function to calculate the bar length in the specified radial region.
+    -----------
+    Parameters:
+        coordinates: the coordinates of particles
+        masses: the masses of particles
+        scope: the range of radial bins
+        bins: the number of radial bins
+        threshold: the threshold to define the bar length, here is 0.5*A2max position
+
+    Return:
+        barLength: the bar length in the specified radial region
+    """
+    A2amps = GetA2amps(coordinates, masses, scope, bins)
+    RbinEdges = np.linspace(scope[0], scope[1], bins + 1)  # the edges of radial bins
+    RbinCenters = (RbinEdges[1:] + RbinEdges[:-1]) / 2  # the centers of radial bins
+
+    locMax = np.where(A2amps == np.max(A2amps))[0][
+        0
+    ]  # the location of maximum A2 amplitude
+    A2amps = A2amps[locMax:]
+    RbinCenters = RbinCenters[locMax:]
+    # only consider the radial bins after the maximum A2 amplitude
+
+    # the location of first cross of threshold
+    try:
+        locFirstCross = np.where(A2amps < threshold * A2amps[0])[0][ 0 ]
+        return RbinCenters[locFirstCross]
+    except:
+        return 0 # if no cross, there is no well-defined bar length
+
+
+def GetBarAngle(coordinates, masses, size=15):
+    """
+    Function to calculate the bar major axis angle.
+    -----------
+    Parameters:
+        coordinates: the coordinates of particles
+        masses: the masses of particles
+        size: the size of particles to calculate the center of masses
+
+    Return:
+        barAngle: the bar major axis angle 
+    """
+    cenOfMass = GetCoM(coordinates, masses, size=size)
+    _, phis, _ = Car2Cylin3D(coordinates, cenOfMass)
+    return GetA2phase(masses, phis)
