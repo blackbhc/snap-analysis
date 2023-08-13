@@ -103,3 +103,4 @@ for i, file in enumerate(files):
     plt.colorbar(im, cax=cax)
     plt.savefig("./Figs/" + file[:-5] + ".png")
     plt.close(i)
+    data.close()
