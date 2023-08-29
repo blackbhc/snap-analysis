@@ -133,6 +133,33 @@ def GetA2max(coordinates, masses, scope=[0, 10], bins=50):
     return np.max(A2s)
 
 
+def GetSbarMax(coordinates, masses, scope=[0, 10], bins=50):
+    """
+    Function to calculate the maximum A2 absolute value in some radial bins.
+    -------------------------
+    Parameters:
+        coordinates: the coordinates of particles
+        masses: the masses of particles
+        scope: the range of radial bins
+        bins: the number of radial bins
+
+    Return:
+        A2max: the maximum A2 absolute value in radial bins
+    """
+    Rs, phis, _ = Car2Cylin3D(
+        coordinates, GetCoM(coordinates, masses, size=10)
+    )  # convert the coordinates to cylindrical
+    RbinEdges = np.linspace(scope[0], scope[1], bins + 1)  # the edges of radial bins
+    barStrengths = np.zeros(bins)  # initialize the A2 values in radial bins
+    for i in range(bins):
+        index = np.where((Rs >= RbinEdges[i]) & (Rs < RbinEdges[i + 1]))[0]
+        # the condition to select the particles: inside the radial bin
+        barStrengths[i] = np.abs(
+            BarStrength(masses[index], phis[index])
+        )  # calculate the A2 value in radial bin
+    return np.max(barStrengths)
+
+
 def GetA2phases(coordinates, masses, scope=[0, 10], bins=50):
     """
     Function to calculate the phase angles of m=2 Fourier mode in some radial bins.
@@ -211,10 +238,12 @@ def GetBarLength(coordinates, masses, scope=[0, 20], bins=50, threshold=0.5):
     A2amps = A2amps[locMax:]
     RbinCenters = RbinCenters[locMax:]
     # only consider the radial bins after the maximum A2 amplitude
+    A2min = np.min(A2amps)  # the minimum A2 amplitude
+    span = np.max(A2amps) - A2min  # the span of A2 amplitude
 
     # the location of first cross of threshold
     try:
-        locFirstCross = np.where(A2amps < threshold * A2amps[0])[0][ 0 ]
+        locFirstCross = np.where(A2amps < threshold * span + A2min)[0][ 0 ]
         return RbinCenters[locFirstCross]
     except:
         return 0 # if no cross, there is no well-defined bar length
