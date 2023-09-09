@@ -18,7 +18,7 @@ def potGridTracer(resolution, rMax=20.0):
     tracerGrid = [
         [0.0, 0.0, 0.0]
     ]  # 2D array, each row is a tracer point, in the form of [x, y, z]
-    for i in range(len(radiuses)):
+    for i in range(nBinR):
         radius = radiuses[i + 1]
         perimeter = 2.0 * np.pi * radius
         nBinTheta = int(perimeter / resolution)
