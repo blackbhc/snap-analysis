@@ -243,10 +243,10 @@ def GetBarLength(coordinates, masses, scope=[0, 20], bins=50, threshold=0.5):
 
     # the location of first cross of threshold
     try:
-        locFirstCross = np.where(A2amps < threshold * span + A2min)[0][ 0 ]
+        locFirstCross = np.where(A2amps < threshold * span + A2min)[0][0]
         return RbinCenters[locFirstCross]
     except:
-        return 0 # if no cross, there is no well-defined bar length
+        return 0  # if no cross, there is no well-defined bar length
 
 
 def GetBarAngle(coordinates, masses, size=15):
@@ -259,7 +259,7 @@ def GetBarAngle(coordinates, masses, size=15):
         size: the size of particles to calculate the center of masses
 
     Return:
-        barAngle: the bar major axis angle 
+        barAngle: the bar major axis angle
     """
     cenOfMass = GetCoM(coordinates, masses, size=size)
     _, phis, _ = Car2Cylin3D(coordinates, cenOfMass)

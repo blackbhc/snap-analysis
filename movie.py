@@ -11,7 +11,8 @@ def Movie(figures, movie_name, fps):
         fps: frames per second
     """
     import imageio
+
     images = []
     for figure in figures:
         images.append(imageio.imread(figure))
-    imageio.mimsave('{}.gif'.format(movie_name), images, duration=1000/fps)
+    imageio.mimsave("{}.gif".format(movie_name), images, duration=1000 / fps)
