@@ -75,7 +75,8 @@ def deriv1_r(x, array):
     ----------------
     Notes: the 1st order derivative is calculated by the formula: (f(x_j) - f(x_j-1)) / (x_j - x_j-1)
     """
-    array = np.array(array)
+    array = np.array(array)[np.argsort(x)]
+    x = np.array(x)[np.argsort(x)]
     binCenters = (x[1:] + x[:-1]) / 2
     return binCenters, (array[1:] - array[:-1]) / (x[1:] - x[:-1])
 
@@ -98,7 +99,8 @@ def deriv2_r(x, array):
     Notes: the 2nd order derivative is calculated by the formula:
     ( (f_xi+1 - f_xi) / (xi+1 - xi) - (f_xi - f_xi-1) / (xi - xi-1) ) / ((xi+1 - xi-1) / 2)
     """
-    array = np.array(array)
+    array = np.array(array)[np.argsort(x)]
+    x = np.array(x)[np.argsort(x)]
     bin1, der1 = deriv1_r(x, array)
     return deriv1_r(bin1, der1)
 
