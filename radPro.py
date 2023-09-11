@@ -118,6 +118,7 @@ def rotCurve(radiuses, potentials):
     binCenters: 1D numpy.array like, the bin centers of the rotation curve.
     rotCurve: 1D numpy.array like, the rotation velocities at binCenters.
     """
+    radiuses, potentials = np.array(radiuses), np.array(potentials)
     binCenters, der1 = deriv1_r(radiuses, potentials) # calculate the 1st order derivative of the potential values
     return binCenters, np.sqrt(binCenters * der1) # calculate the rotation curve
 
@@ -135,6 +136,7 @@ def kappa(radiuses, potentials):
     binCenters: 1D numpy.array like, the bin centers of the Kappa profile.
     Kappa: 1D numpy.array like, the Kappa values at binCenters.
     """
+    radiuses, potentials = np.array(radiuses), np.array(potentials)
     rs1, der1 = deriv1_r(radiuses, potentials) # calculate the 1st order derivative of the potential values
     Omega = np.sqrt(der1/rs1) # calculate the angular velocity
     rs2, dOmega_dR = deriv1_r(rs1, Omega) # calculate the 1st order derivative of the angular velocity
@@ -142,4 +144,25 @@ def kappa(radiuses, potentials):
     Kappa2 = -4*B*(Omega[:1] + Omega[:-1])/2 # calculate the Kappa profile
     return rs2, np.sqrt(Kappa2)
     
+# function to calculate the Toomre Q profile of a galaxy from the potential profile at some azimuthal direction
+def toomreQ(radiuses, potentials, disR, surDen, G=43007.1):
+    """
+    Function to calculate the Toomre Q profile of a galaxy from the potential at some azimuthal direction
+    ----------------
+    Parameters:
+    radiuses: 1D numpy.array like, the radiuses of the potential values.
+    potentials: 1D numpy.array like, the potential values at the given radiuses.
+    disR: 1D numpy.array like, the radial velocity dispersion profile of the galaxy. len= len(radiuses)
+    surDen: 1D numpy.array like, the surface density profile of the galaxy. len= len(radiuses)
+    G: float, the gravitational constant.
+
+    ----------------
+    Returns:
+    binCenters: 1D numpy.array like, the bin centers of the Toomre Q profile. len = len(radiuses)-2
+    Q: 1D numpy.array like, the Toomre Q values at binCenters.
+    """
+    radiuses, potentials, disR, surDen = np.array(radiuses), np.array(potentials), np.array(disR), np.array(surDen)
+    rs, kappas = kappa(radiuses, potentials) # calculate the Kappa profile
+    return rs, disR[1:-1] * kappas / (3.36 * G * surDen[1:-1]) # calculate the Toomre Q profile
+
 
