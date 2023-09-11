@@ -4,6 +4,7 @@
 import numpy as np
 from scipy.optimize import ridder
 
+
 # calculate the 1st order derivative of an array in evenly spaced bins
 def deriv1_u(array, xmin, xmax):
     """
@@ -104,6 +105,7 @@ def deriv2_r(x, array):
     bin1, der1 = deriv1_r(x, array)
     return deriv1_r(bin1, der1)
 
+
 # function to calculate the rotation curve of a galaxy from the potential at some azimuthal direction
 def rotCurve(radiuses, potentials):
     """
@@ -119,8 +121,11 @@ def rotCurve(radiuses, potentials):
     rotCurve: 1D numpy.array like, the rotation velocities at binCenters.
     """
     radiuses, potentials = np.array(radiuses), np.array(potentials)
-    binCenters, der1 = deriv1_r(radiuses, potentials) # calculate the 1st order derivative of the potential values
-    return binCenters, np.sqrt(binCenters * der1) # calculate the rotation curve
+    binCenters, der1 = deriv1_r(
+        radiuses, potentials
+    )  # calculate the 1st order derivative of the potential values
+    return binCenters, np.sqrt(binCenters * der1)  # calculate the rotation curve
+
 
 # function to calculate the Kappa (radial epicycle frequency) profile of a galaxy from the potential at some azimuthal direction
 def kappa(radiuses, potentials):
@@ -137,13 +142,20 @@ def kappa(radiuses, potentials):
     Kappa: 1D numpy.array like, the Kappa values at binCenters.
     """
     radiuses, potentials = np.array(radiuses), np.array(potentials)
-    rs1, der1 = deriv1_r(radiuses, potentials) # calculate the 1st order derivative of the potential values
-    Omega = np.sqrt(der1/rs1) # calculate the angular velocity
-    rs2, dOmega_dR = deriv1_r(rs1, Omega) # calculate the 1st order derivative of the angular velocity
-    B = -(Omega[1:] + Omega[:-1]) / 2  - rs2 * dOmega_dR / 2 # calculate the B Oort constant
-    Kappa2 = -4*B*(Omega[:1] + Omega[:-1])/2 # calculate the Kappa profile
+    rs1, der1 = deriv1_r(
+        radiuses, potentials
+    )  # calculate the 1st order derivative of the potential values
+    Omega = np.sqrt(der1 / rs1)  # calculate the angular velocity
+    rs2, dOmega_dR = deriv1_r(
+        rs1, Omega
+    )  # calculate the 1st order derivative of the angular velocity
+    B = (
+        -(Omega[1:] + Omega[:-1]) / 2 - rs2 * dOmega_dR / 2
+    )  # calculate the B Oort constant
+    Kappa2 = -4 * B * (Omega[:1] + Omega[:-1]) / 2  # calculate the Kappa profile
     return rs2, np.sqrt(Kappa2)
-    
+
+
 # function to calculate the Toomre Q profile of a galaxy from the potential profile at some azimuthal direction
 def toomreQ(radiuses, potentials, disR, surDen, G=43007.1):
     """
@@ -152,17 +164,22 @@ def toomreQ(radiuses, potentials, disR, surDen, G=43007.1):
     Parameters:
     radiuses: 1D numpy.array like, the radiuses of the potential values.
     potentials: 1D numpy.array like, the potential values at the given radiuses.
-    disR: 1D numpy.array like, the radial velocity dispersion profile of the galaxy. len= len(radiuses)
-    surDen: 1D numpy.array like, the surface density profile of the galaxy. len= len(radiuses)
+    disR: 1D numpy.array like, the radial velocity dispersion profile of the galaxy. len= len(radiuses) - 2
+    surDen: 1D numpy.array like, the surface density profile of the galaxy. len= len(radiuses) - 2
     G: float, the gravitational constant.
+    (Note: the radiuses, potentials should have more data points at the beginning and the end than disR and
+    surDen, to make sure the calculation is accurate)
 
     ----------------
     Returns:
     binCenters: 1D numpy.array like, the bin centers of the Toomre Q profile. len = len(radiuses)-2
     Q: 1D numpy.array like, the Toomre Q values at binCenters.
     """
-    radiuses, potentials, disR, surDen = np.array(radiuses), np.array(potentials), np.array(disR), np.array(surDen)
-    rs, kappas = kappa(radiuses, potentials) # calculate the Kappa profile
-    return rs, disR[1:-1] * kappas / (3.36 * G * surDen[1:-1]) # calculate the Toomre Q profile
-
-
+    radiuses, potentials, disR, surDen = (
+        np.array(radiuses),
+        np.array(potentials),
+        np.array(disR),
+        np.array(surDen),
+    )
+    rs, kappas = kappa(radiuses, potentials)  # calculate the Kappa profile
+    return rs, disR * kappas / (3.36 * G * surDen)  # calculate the Toomre Q profile
