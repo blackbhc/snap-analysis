@@ -2,7 +2,6 @@
 # Purpose: functions to calculate the radial profiles of a galaxy
 # Return values convention: all functions return the radial bin centers and the corresponding values
 import numpy as np
-from scipy.optimize import ridder
 
 
 # calculate the 1st order derivative of an array in evenly spaced bins
