@@ -122,7 +122,7 @@ def rotCurve(radiuses, potentials):
     return binCenters, np.sqrt(binCenters * der1) # calculate the rotation curve
 
 # function to calculate the Kappa (radial epicycle frequency) profile of a galaxy from the potential at some azimuthal direction
-def Kappa(radiuses, potentials):
+def kappa(radiuses, potentials):
     """
     Function to calculate the Kappa (radial epicycle frequency) profile of a galaxy from the potential at some azimuthal direction
     ----------------
