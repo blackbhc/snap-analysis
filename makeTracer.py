@@ -17,12 +17,12 @@ def potGridTracer(anglebinNum=64, rbinNum=50, rMax=20.0, rbinForm="log"):
     """
     rbinForm = rbinForm.lower()  # make sure the input is lower case
     if rbinForm == "linear":
-        radiuses = np.linspace(0.0, rMax, rbinNum + 1)[1:]
+        radii = np.linspace(0.0, rMax, rbinNum + 1)[1:]
     elif rbinForm == "log":
-        radiuses = np.linspace(
+        radii = np.linspace(
             0.0, np.log(rMax + 1), rbinNum + 1
         )  # linearly spaced in log space
-        radiuses = np.exp(radiuses)[1:] - 1.0  # in linear space
+        radii = np.exp(radii)[1:] - 1.0  # in linear space
     else:
         raise ValueError(
             "rbinForm must be either 'linear' or 'log'!"
@@ -31,7 +31,7 @@ def potGridTracer(anglebinNum=64, rbinNum=50, rMax=20.0, rbinForm="log"):
     tracerGrid = [
         [0.0, 0.0, 0.0]  # the center of the tracer grid
     ]  # 2D array, each row is a tracer point, in the form of [x, y, z]
-    for radius in radiuses:
+    for radius in radii:
         for theta in thetas:
             x = radius * np.cos(theta)
             y = radius * np.sin(theta)
