@@ -148,10 +148,11 @@ def kappa(radii, potentials):
     rs2, dOmega_dR = deriv1_r(
         rs1, Omega
     )  # calculate the 1st order derivative of the angular velocity
-    B = (
-        -(Omega[1:] + Omega[:-1]) / 2 - rs2 * dOmega_dR / 2
-    )  # calculate the B Oort constant
-    Kappa2 = -4 * B * (Omega[:1] + Omega[:-1]) / 2  # calculate the Kappa profile
+    B = -(Omega[1:] + Omega[:-1]) / 2 - rs2 * dOmega_dR / 2
+    # calculate the B Oort constant
+    midOmega = np.array((Omega[1:] + Omega[:-1])) / 2
+    # calculate the mid angular velocity
+    Kappa2 = -4 * B * midOmega  # calculate the Kappa profile
     return rs2, np.sqrt(Kappa2)
 
 
