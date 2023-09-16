@@ -27,12 +27,12 @@ def potGridTracer(anglebinNum=64, rbinNum=50, rMax=20.0, rbinForm="log"):
         raise ValueError(
             "rbinForm must be either 'linear' or 'log'!"
         )  # raise error if the input is not valid
-    thetas = np.linspace(0.0, 2.0 * np.pi, anglebinNum + 1)
+    thetas = np.linspace(0.0, 2.0 * np.pi, anglebinNum + 1)[:-1]
     tracerGrid = [
         [0.0, 0.0, 0.0]  # the center of the tracer grid
     ]  # 2D array, each row is a tracer point, in the form of [x, y, z]
-    for radius in radii:
-        for theta in thetas:
+    for theta in thetas:
+        for radius in radii:
             x = radius * np.cos(theta)
             y = radius * np.sin(theta)
             tracerGrid.append([x, y, 0.0])
