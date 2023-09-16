@@ -180,5 +180,17 @@ def toomreQ(radii, potentials, disR, surDen, G=43007.1):
         np.array(disR),
         np.array(surDen),
     )
+    surDen = polishNaN(surDen)  # remove the nan values in the surface density profile
     rs, kappas = kappa(radii, potentials)  # calculate the Kappa profile
     return rs, disR * kappas / (3.36 * G * surDen)  # calculate the Toomre Q profile
+
+
+def polishNaN(data):
+    # This function is used to polish the array/matrix to set its nan values to 0
+    data = np.array(data)
+    if len(data.shape) == 1:
+        index = np.where(np.isnan(data))[0]
+    else:
+        index = np.where(np.isnan(data))
+    data[index] = 0
+    return data
