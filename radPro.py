@@ -10,17 +10,20 @@ def deriv1_u(array, xmin, xmax):
     Function to calculate the first order derivative of an array: The array is assumed to be evenly spaced.
     ----------------
     Parameters:
-    array: 1D numpy.array like, the array of which the 1st order derivative to be calculated
+    array: 1D numpy.array like, the array of which the 1st order derivative to be calculated.
+
     xmin: float, the minimum value of the argument of the function.
+
     xmax: float, the maximum value of the argument of the function.
 
     ----------------
     Returns:
-    binCenters: 1D numpy.array like, the bin centers of the array
-    der1: 1D numpy.array like, the 1st order derivative of the given array
+    binCenters: 1D numpy.array like, the bin centers of the array.
+
+    der1: 1D numpy.array like, the 1st order derivative of the given array.
 
     ----------------
-    Notes: the 1st order derivative is calculated by the formula: (f(x+dx/2) - f(x-dx/2)) / (dx)
+    Notes: the 1st order derivative is calculated by the formula: (f(x+dx/2) - f(x-dx/2)) / (dx).
     """
     array = np.array(array)
     num = len(array) - 1  # number of bins
@@ -37,14 +40,17 @@ def deriv2_u(array, xmin, xmax):
     Function to calculate the second order derivative of an array: The array is assumed to be evenly spaced.
     ----------------
     Parameters:
-    array: 1D numpy.array like, the array of which the 2nd order derivative to be calculated
+    array: 1D numpy.array like, the array of which the 2nd order derivative to be calculated.
+
     xmin: float, the minimum value of the argument of the function.
+
     xmax: float, the maximum value of the argument of the function.
 
     ----------------
     Returns:
-    binCenters: 1D numpy.array like, the bin centers of the array
-    der2: 1D numpy.array like, the 2nd order derivative of the given array
+    binCenters: 1D numpy.array like, the bin centers of the array.
+
+    der2: 1D numpy.array like, the 2nd order derivative of the given array.
 
     ----------------
     Notes: the 2nd order derivative is calculated by the formula: (f(x+dx) + f(x-dx) - 2f(x)) / dx^2
@@ -64,16 +70,18 @@ def deriv1_r(x, array):
     Function to calculate the first order derivative of an data points' array at the given argument values.
     ----------------
     Parameters:
-    x: 1D numpy.array like, the argument values at whether the array is evaluated
-    array: 1D numpy.array like, the array of which the 1st order derivative to be calculated
+    x: 1D numpy.array like, the argument values at whether the array is evaluated.
+
+    array: 1D numpy.array like, the array of which the 1st order derivative to be calculated.
 
     ----------------
     Returns:
-    binCenters: 1D numpy.array like, the bin centers of calculated derivative values
-    der1: 1D numpy.array like, the 1st order derivative of the given array
+    binCenters: 1D numpy.array like, the bin centers of calculated derivative values.
+
+    der1: 1D numpy.array like, the 1st order derivative of the given array.
 
     ----------------
-    Notes: the 1st order derivative is calculated by the formula: (f(x_j) - f(x_j-1)) / (x_j - x_j-1)
+    Notes: the 1st order derivative is calculated by the formula: (f(x_j) - f(x_j-1)) / (x_j - x_j-1).
     """
     array = np.array(array)[np.argsort(x)]
     x = np.array(x)[np.argsort(x)]
@@ -87,17 +95,19 @@ def deriv2_r(x, array):
     Function to calculate the second order derivative of an data points' array at the given argument values.
     ----------------
     Parameters:
-    x: 1D numpy.array like, the argument values at whether the array is evaluated
-    array: 1D numpy.array like, the array of which the 2nd order derivative to be calculated
+    x: 1D numpy.array like, the argument values at whether the array is evaluated.
+
+    array: 1D numpy.array like, the array of which the 2nd order derivative to be calculated.
 
     ----------------
     Returns:
-    binCenters: 1D numpy.array like, the bin centers of calculated derivative values
-    der2: 1D numpy.array like, the 2nd order derivative of the given array
+    binCenters: 1D numpy.array like, the bin centers of calculated derivative values.
+
+    der2: 1D numpy.array like, the 2nd order derivative of the given array.
 
     ----------------
     Notes: the 2nd order derivative is calculated by the formula:
-    ( (f_xi+1 - f_xi) / (xi+1 - xi) - (f_xi - f_xi-1) / (xi - xi-1) ) / ((xi+1 - xi-1) / 2)
+    ( (f_xi+1 - f_xi) / (xi+1 - xi) - (f_xi - f_xi-1) / (xi - xi-1) ) / ((xi+1 - xi-1) / 2).
     """
     array = np.array(array)[np.argsort(x)]
     x = np.array(x)[np.argsort(x)]
@@ -112,11 +122,13 @@ def rotCurve(radii, potentials):
     ----------------
     Parameters:
     radii: 1D numpy.array like, the radii of the potential values.
+
     potentials: 1D numpy.array like, the potential values at the given radii.
 
     ----------------
     Returns:
     binCenters: 1D numpy.array like, the bin centers of the rotation curve.
+
     rotCurve: 1D numpy.array like, the rotation velocities at binCenters.
     """
     radii, potentials = np.array(radii), np.array(potentials)
@@ -133,11 +145,13 @@ def kappa(radii, potentials):
     ----------------
     Parameters:
     radii: 1D numpy.array like, the radii of the potential values.
+
     potentials: 1D numpy.array like, the potential values at the given radii.
 
     ----------------
     Returns:
     binCenters: 1D numpy.array like, the bin centers of the Kappa profile.
+
     Kappa: 1D numpy.array like, the Kappa values at binCenters.
     """
     radii, potentials = np.array(radii), np.array(potentials)
@@ -163,16 +177,22 @@ def toomreQ(radii, potentials, disR, surDen, G=43007.1):
     ----------------
     Parameters:
     radii: 1D numpy.array like, the radii of the potential values.
+
     potentials: 1D numpy.array like, the potential values at the given radii.
-    disR: 1D numpy.array like, the radial velocity dispersion profile of the galaxy. len= len(radii) - 2
-    surDen: 1D numpy.array like, the surface density profile of the galaxy. len= len(radii) - 2
+
+    disR: 1D numpy.array like, the radial velocity dispersion profile of the galaxy. len= len(radii) - 2.
+
+    surDen: 1D numpy.array like, the surface density profile of the galaxy. len= len(radii) - 2.
+
     G: float, the gravitational constant.
+
     (Note: the radii, potentials should have more data points at the beginning and the end than disR and
-    surDen, to make sure the calculation is accurate)
+    surDen, to make sure the calculation is accurate.)
 
     ----------------
     Returns:
-    binCenters: 1D numpy.array like, the bin centers of the Toomre Q profile. len = len(radii)-2
+    binCenters: 1D numpy.array like, the bin centers of the Toomre Q profile. len = len(radii)-2.
+
     Q: 1D numpy.array like, the Toomre Q values at binCenters.
     """
     radii, potentials, disR, surDen = (
